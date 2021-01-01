@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authors</title>
+    {% load static %}
+    <link rel='stylesheet' href='{% static 'bookAuthorStyle.css' %}'>
+</head>
+<body>
+    <div id="container">
+        <form action="author/add" method=POST><h1>Add an Author</h1>
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td><label for="first_name" require>First Name</label></td>
+                    <td><textarea name="first_name" cols="20" rows="1" required></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="last_name" require>Last Name</label></td>
+                    <td><textarea name="last_name" cols="20" rows="1" required></textarea></td>
+                </tr>
+                <tr>
+                    <td><label for="notes">Notes</label></td>
+                    <td><textarea name="notes" cols="20" rows="6" maxlength="255"></textarea></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button>Add</button></td>
+                </tr>
+            </table>
+        </form>
+        <table id="display-table">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+            {% for author in all_authors %}
+                <tr>
+                    <td>{{ author.id }}</td>
+                    <td>{{ author.first_name }} {{ author.last_name }}</td>
+                    <td><a href="/author/{{ author.id }}">View</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

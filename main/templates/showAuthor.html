@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Author</title>
+    {% load static %}
+    <link rel='stylesheet' href='{% static 'show.css' %}'>
+</head>
+<body>
+    <table>
+        <tr>
+            <td><h1>{{ this_author.first_name }} {{ this_author.last_name }}</h1></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>ID: {{ this_author.id }}</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Notes</td>
+            <td>{{ this_author.notes }}</td>
+        </tr>
+    </table>
+    <ul><h3>Books:</h3>
+        {% for book in this_author.book_written.all %}
+        <li>{{ book.tittle}}</li>
+        {% endfor %}
+        <form action='/author/add-book/{{ this_author.id }}' method=POST>
+            {% csrf_token %}
+            <input type="hidden" name="author_id" value = "{{ this_author.id }}">
+            <select name="book_id" id="">
+                {% for book in all_books %}
+                {% if book not in this_author.book_written.all %}
+                <option name="book_id" value="{{ book.id }}">{{ book.tittle }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <button>Add</button>
+        </form>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,90 @@
+python manage.py shell
+from main.models import Book, Author
+
+#1: Query: Create 5 books with the following names: C Sharp, Java, Python, PHP, Ruby
+Book.objects.create(tittle="C Sharp")
+Book.objects.create(tittle="Java")
+Book.objects.create(tittle="Python")
+Book.objects.create(tittle="PHP")
+Book.objects.create(tittle="Ruby")
+
+#2: Query: Create 5 different authors: Jane Austen, Emily Dickinson, Fyodor Dostoevsky, William Shakespeare, Lau Tzu
+Author.objects.create(first_name="Jane",last_name="Austen")
+Author.objects.create(first_name="Emily",last_name="Dickinson")
+Author.objects.create(first_name="Fyodor",last_name="Dostoevsky")
+Author.objects.create(first_name="William",last_name="Shakespeare")
+Author.objects.create(first_name="Lau",last_name="Tzu")
+exit()
+
+#3: Create and run the migration files to update the table in your database.
+python manage.py makemigrations
+python manage.py migrate    
+python manage.py shell
+from main.models import Book, Author
+
+#4: Query: Change the name of the C Sharp book to C#
+c=Book.objects.get(tittle="C Sharp")
+c.tittle = "C#"
+c.save()
+
+#5: Query: Change the first name of the 4th author to Bill
+a4=Author.objects.get(id=4)
+a4.first_name="Bill"
+a4.save()
+
+#6: Query: Assign the first author to the first 2 books
+b1=Book.objects.get(id=1)
+a1=Author.objects.get(id=1)
+b1.written_by.add(a1)
+
+b2=Book.objects.get(id=2)
+b2.written_by.add(a1)
+
+
+#7: Query: Assign the second author to the first 3 books
+b1.written_by.add(Author.objects.get(id=2))
+b2.written_by.add(Author.objects.get(id=2))
+Book.objects.get(id=3).written_by.add(Author.objects.get(id=2))
+
+#8: Query: Assign the third author to the first 4 books
+Book.objects.get(id=1).written_by.add(Author.objects.get(id=3))
+Book.objects.get(id=2).written_by.add(Author.objects.get(id=3))
+Book.objects.get(id=3).written_by.add(Author.objects.get(id=3))
+Book.objects.get(id=4).written_by.add(Author.objects.get(id=3))
+
+#9: Query: Assign the fourth author to the first 5 books (or in other words, all the books)
+Book.objects.get(id=1).written_by.add(Author.objects.get(id=4))
+Book.objects.get(id=2).written_by.add(Author.objects.get(id=4))
+Book.objects.get(id=3).written_by.add(Author.objects.get(id=4))
+Book.objects.get(id=4).written_by.add(Author.objects.get(id=4))
+Book.objects.get(id=5).written_by.add(Author.objects.get(id=4))
+
+or
+b4=Book.objects.get(id=4)
+b5=Book.objects.get(id=5)
+a1.book_written.add(b1, b2, b3, b4, b5)
+b5.written_by.add(a1, a2, a3, a4, a5)
+
+or
+author.book_written.add(*Book.objects.all())
+What’s the * in the add() function for Morley?
+It’s called a splat operator
+
+
+#10: Query: Retrieve all the authors for the 3rd book
+b3=Book.objects.get(id=3)
+b3.written_by.all()
+
+#11: Query: Remove the first author of the 3rd book
+b3.written_by.remove(b3.written_by.first())
+
+#12: Query: Add the 5th author as one of the authors of the 2nd book
+b2.written_by.add(Author.objects.get(id=5))
+
+#13: Query: Find all the books that the 3rd author is part of
+a3 = Author.objects.get(id=3)
+a3.book_written.all()
+
+
+a2 = Author.objects.get(id=2)
+a5 = Author.objects.get(id=5)
